@@ -5,29 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>УРАЛ-1</title>
 <style>
-/* === ОБЩИЙ СТИЛЬ === */
 body{
 margin:0;
 font-family:Georgia,"Times New Roman",serif;
 color:#10213f;
 background:
-radial-gradient(circle at top left,
-rgba(255,220,150,0.45),
-transparent 35%),
-radial-gradient(circle at top right,
-rgba(120,170,220,0.35),
-transparent 35%),
-linear-gradient(
-135deg,
-#fff7e6 0%,
-#edf4ff 45%,
-#f7f3ea 100%);
+radial-gradient(circle at top left,rgba(255,220,150,0.45),transparent 35%),
+radial-gradient(circle at top right,rgba(120,170,220,0.35),transparent 35%),
+linear-gradient(135deg,#fff7e6 0%,#edf4ff 45%,#f7f3ea 100%);
 }
 a{
 text-decoration:none;
 color:#10213f;
 }
-/* === ШАПКА === */
 header{
 padding:24px 48px;
 display:flex;
@@ -86,15 +76,78 @@ padding:20px;
 border-radius:12px;
 border:1px solid #dacdb8;
 }
+.stats{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+margin:20px 48px 40px;
+border:1px solid #dacdb8;
+border-radius:12px;
+background:rgba(255,255,255,0.75);
+overflow:hidden;
+}
+.stat{
+text-align:center;
+padding:22px;
+border-right:1px solid #dacdb8;
+}
+.stat:last-child{
+border-right:none;
+}
+.stat strong{
+display:block;
+font-size:32px;
+color:#7a5428;
+}
+.principle{
+margin:0 48px 50px;
+padding:32px;
+background:rgba(255,255,255,0.65);
+border:1px solid #dacdb8;
+border-radius:12px;
+}
+.principle h2{
+margin-top:0;
+color:#7a5428;
+}
+.principle p{
+font-size:18px;
+line-height:1.5;
+}
 footer{
 padding:24px 48px;
 border-top:1px solid #d8cbb5;
 background:rgba(255,250,240,0.9);
 }
+@media(max-width:900px){
+header{
+display:block;
+}
+nav a{
+display:block;
+margin:10px 0;
+}
+.hero{
+flex-direction:column;
+padding:40px 24px;
+}
+.hero-text h1{
+font-size:54px;
+}
+.cards{
+grid-template-columns:1fr;
+padding:0 24px 30px;
+}
+.stats{
+grid-template-columns:1fr;
+margin:20px 24px 30px;
+}
+.principle{
+margin:0 24px 40px;
+}
+}
 </style>
 </head>
 <body>
-<!-- ===== ШАПКА ===== -->
 <header>
 <div>
 <div class="logo">УРАЛ-1</div>
@@ -108,28 +161,20 @@ background:rgba(255,250,240,0.9);
 <a href="#">Библиотека</a>
 </nav>
 </header>
-section class="hero">
+<section class="hero">
 <div class="hero-text">
 <h1>УРАЛ-1</h1>
-<h2>
-Виртуальный город знаний,
-исследований и сотрудничества
-</h2>
+<h2>Виртуальный город знаний, исследований и сотрудничества</h2>
 <p>
-Мы создаём пространство,
-в котором люди могут вместе
-изучать, исследовать и строить будущее.
+Мы создаём пространство, в котором люди могут вместе изучать,
+исследовать и строить будущее.
 </p>
 </div>
 <div class="hero-image">
-<img src="images/city.jpg"
-alt="Город УРАЛ-1">
+<img src="images/city.jpg" alt="Город УРАЛ-1">
 </div>
 </section>
-<!-- ===== НАПРАВЛЕНИЯ ===== -->
-<h2 class="section-title">
-ДОМА И НАПРАВЛЕНИЯ ГОРОДА
-</h2>
+<h2 class="section-title">ДОМА И НАПРАВЛЕНИЯ ГОРОДА</h2>
 <section class="cards">
 <div class="card">
 <h3>Дом знаний</h3>
@@ -156,12 +201,39 @@ alt="Город УРАЛ-1">
 <p>Конституция, хартии и кодексы.</p>
 </div>
 </section>
-<!-- ===== ПОДВАЛ ===== -->
+<section class="stats">
+<div class="stat">
+<strong>13</strong>
+<span>документов</span>
+</div>
+<div class="stat">
+<strong>1</strong>
+<span>участник</span>
+</div>
+<div class="stat">
+<strong>2026</strong>
+<span>год основания</span>
+</div>
+<div class="stat">
+<strong>0</strong>
+<span>домов знаний</span>
+</div>
+</section>
+<section class="principle">
+<h2>Главный принцип УРАЛ-1</h2>
+<p>
+УРАЛ-1 создаётся не как готовая система ответов, а как пространство,
+где люди могут вместе искать, проверять, обсуждать и развивать идеи.
+</p>
+<p>
+Ценность идеи определяется не статусом автора, а её содержанием,
+аргументацией, проверяемостью и возможной пользой для людей.
+</p>
+</section>
 <footer>
 Версия 0.1<br>
 УРАЛ-1 • 2026<br>
-Инициатор проекта:
-Дмитрий Копытов
+Инициатор проекта: Дмитрий Копытов
 </footer>
 </body>
 </html>
