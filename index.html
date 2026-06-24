@@ -184,6 +184,34 @@ button {
     font-size: 42px;
   }
 }
+.city-stats {
+  background: rgba(5, 9, 20, 0.92);
+  padding: 35px 20px;
+  text-align: center;
+  border-top: 1px solid rgba(255, 214, 107, 0.25);
+  border-bottom: 1px solid rgba(255, 214, 107, 0.25);
+}
+.stats-grid {
+  max-width: 1000px;
+  margin: 25px auto 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 14px;
+}
+.stat-card {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 214, 107, 0.35);
+  border-radius: 18px;
+  padding: 18px 12px;
+}
+.stat-card h3 {
+  color: #ffd66b;
+  font-size: 28px;
+  margin: 0 0 6px 0;
+}
+.founder-stat {
+  cursor: pointer;
+}
 </style>
 </head>
 <body>
@@ -232,6 +260,8 @@ button {
       </button>
     </div>
   </section>
+
+
 </main>
 <!-- ========================================= -->
 <!-- STATS-001 / СТАТИСТИКА ГОРОДА             -->
@@ -265,8 +295,7 @@ button {
       <p>Основателей</p>
     </div>
   </div>
-</section>
-<!-- ========================================= -->
+</section><!-- ========================================= -->
 <!-- INFO-001 / ГЛАВНЫЙ ПРИНЦИП                -->
 <!-- ========================================= -->
 <section class="city-section">
@@ -372,6 +401,7 @@ const cityBranches = [
 { id: "routes", title: "МАРШРУТЫ / ROUTEN", text: "Маршруты к учреждениям, лавкам, событиям, проблемам и интересным местам." },
 { id: "navigation", title: "НАВИГАЦИЯ / NAVIGATION", text: "Городская навигация: куда пойти, как добраться, что рядом." },
 { id: "myHome", title: "МОЙ ДОМ / MEIN HAUS", text: "Личный дом или квартира жителя, его интересы, углы улиц и городские связи." },
+{ id: "foundersSquare", title: "ПЛОЩАДЬ ОСНОВАТЕЛЕЙ", text: "Особое место города. Здесь фиксируются первые жители и основатели проекта." },
 ];
 function makeBranchButtons() {
   let html = '<div class="branch-buttons">';
