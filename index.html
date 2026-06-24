@@ -165,3 +165,150 @@ button {
 }
 </style>
 </head>
+<body>
+<!-- ========================================= -->
+<!-- HEADER-001 / ВЕРХНЕЕ МЕНЮ                 -->
+<!-- ========================================= -->
+<header class="header">
+  <div class="logo">УРАЛ-1</div>
+  <nav class="menu">
+    <button title="Вход для жителей" onclick="openLogin()">Вход</button>
+    <button title="Выбор языка" onclick="openDev('Language')">Language</button>
+    <button title="Краткая информация" onclick="openInfo()">Info</button>
+    <button title="Информация о городе" onclick="openCityInfo()">О городе</button>
+    <button title="Карта города" onclick="openDev('Карта города')">Карта</button>
+    <button title="Институт основания" onclick="openInstitute()">Институт</button>
+    <button title="Архив основания" onclick="openArchive()">Архив</button>
+    <button title="Киностудия УРАЛ-1" onclick="openStudio()">Киностудия</button>
+    <button title="Доступ только основателю" onclick="lockedFunction()">Управление</button>
+  </nav>
+</header>
+<!-- ========================================= -->
+<!-- HERO-001 / ГЛАВНЫЙ ЭКРАН                  -->
+<!-- ========================================= -->
+<main class="hero">
+  <section class="hero-box">
+    <h1>УРАЛ-1</h1>
+    <h2>Виртуальный город исследований</h2>
+    <p>
+      Universum развития, анализа и логики.
+      Пространство, где идеи превращаются в улицы,
+      дома, институты, архивы, киностудию
+      и живую систему будущего.
+    </p>
+    <div class="main-buttons">
+      <button title="Открыть прогулку по городу" onclick="openCityWalk()">
+        Прогуляться по городу
+      </button>
+      <button title="Регистрация и вход для жителей" onclick="openLogin()">
+        Вход для жителей
+      </button>
+      <button title="Открыть архив основания" onclick="openArchive()">
+        Архив основания
+      </button>
+      <button title="Конструктор города / доступ основателя" onclick="openConstructor()">
+        Конструктор города
+      </button>
+    </div>
+  </section>
+</main>
+<!-- ========================================= -->
+<!-- CITY-001 / ПЛОЩАДЬ ОСНОВАТЕЛЕЙ            -->
+<!-- ========================================= -->
+<section class="city-section">
+  <h2>Площадь Основателей</h2>
+  <p>
+    Первые зарезервированные здания и объекты города.
+  </p>
+  <div class="city-grid">
+    <div class="card" title="ARCHIVE-001" onclick="openArchive()">
+      <h3>ARCHIVE-001</h3>
+      <p>Архив Основания</p>
+    </div>
+    <div class="card" title="UNI-001" onclick="openInstitute()">
+      <h3>UNI-001</h3>
+      <p>Институт Основания</p>
+    </div>
+    <div class="card" title="STUDIO-001" onclick="openStudio()">
+      <h3>STUDIO-001</h3>
+      <p>Киностудия УРАЛ-1</p>
+    </div>
+    <div class="card" title="CITY-HALL-001 / доступ только основателю" onclick="lockedFunction()">
+      <h3>CITY-HALL-001</h3>
+      <p>Управление городом</p>
+    </div>
+    <div class="card" title="HOUSE-001" onclick="openCityWalk()">
+      <h3>HOUSE-001</h3>
+      <p>Первый дом</p>
+    </div>
+    <div class="card" title="STREET-001" onclick="openCityWalk()">
+      <h3>STREET-001</h3>
+      <p>Улица Основателей</p>
+    </div>
+  </div>
+</section>
+<!-- ========================================= -->
+<!-- INFO-001 / ГЛАВНЫЙ ПРИНЦИП                -->
+<!-- ========================================= -->
+<section class="city-section">
+  <h2>Главный принцип</h2>
+  <p>
+    УРАЛ-1 — не готовая система ответов,
+    а пространство для исследования, анализа и развития.
+  </p>
+</section>
+<!-- ========================================= -->
+<!-- MODAL-001 / ОБЩЕЕ ОКНО                    -->
+<!-- ========================================= -->
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <h2 id="modalTitle">Заголовок</h2>
+    <div id="modalText">Текст</div>
+    <button class="close-btn" onclick="closeModal()">Закрыть</button>
+  </div>
+</div>
+<script>
+/* ========================================= */
+/* FUNC-001 / ПОКАЗАТЬ ОКНО                  */
+/* ========================================= */
+function showModal(title, text) {
+  document.getElementById("modalTitle").innerHTML = title;
+  document.getElementById("modalText").innerHTML = text;
+  document.getElementById("modal").style.display = "flex";
+  return 0;
+}
+/* ========================================= */
+/* FUNC-002 / ЗАКРЫТЬ ОКНО                   */
+/* ========================================= */
+function closeModal() {
+  document.getElementById("modal").style.display = "none";
+  return 0;
+}
+/* ========================================= */
+/* FUNC-003 / ЗАКРЫТАЯ ФУНКЦИЯ               */
+/* CITY-HALL-001                             */
+/* ========================================= */
+function lockedFunction() {
+  return 0;
+}
+/* ========================================= */
+/* FUNC-004 / INFO                           */
+/* ========================================= */
+function openInfo() {
+  showModal(
+    "INFO-001",
+    `
+    <p>
+    УРАЛ-1 — виртуальный город исследований,
+    анализа, логики и творчества.
+    </p>
+    <p>
+    Версия: V03
+    </p>
+    <p>
+    Каркас города строится поэтапно.
+    </p>
+    `
+  );
+  return 0;
+}
