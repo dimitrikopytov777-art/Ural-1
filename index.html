@@ -312,10 +312,8 @@ function openInfo() {
   );
   return 0; 
 }
- function openConstructor() {
-   alert("работает")
-   return 0
-     showModal(
+function openConstructor() {
+  showModal(
     "CITY-CONSTRUCTOR / АЛЬФА",
     `
     <h3>Дом Основателя</h3>
@@ -332,15 +330,35 @@ function openInfo() {
       <li>Водителей</li>
     </ul>
     <hr>
-    <p><b>Резерв конструктора:</b></p>
-    <p>Создание улиц</p>
-    <p>Создание домов</p>
-    <p>Создание организаций</p>
-    <p>Создание институтов</p>
+    <p><b>Дерево конструктора:</b></p>
+    <button onclick="openStreets()">УЛИЦЫ</button>
+    <button onclick="openHouses()">ДОМА</button>
+    <button onclick="openOrganizations()">ОРГАНИЗАЦИИ</button>
+    <button onclick="openInstitutes()">ИНСТИТУТЫ</button>
     `
   );
   return 0;
 }
-</script>
+function openStreets() {
+  showModal(
+    "УЛИЦЫ / STREET-CONSTRUCTOR",
+    `
+    <h3>Улица Основателей</h3>
+    <p>STREET-001</p>
+    <p>Особая улица города УРАЛ-1.</p>
+    <p>Дом №1 — Дмитрий Копытов.</p>
+    <hr>
+    <button onclick="openConstructor()">НАЗАД В КОНСТРУКТОР</button>
+    <button onclick="alert('Позже здесь будет создание новой улицы')">ДОБАВИТЬ УЛИЦУ</button>
+    `
+  );
+  return 0;
+}
+function openHouses() {
+  showModal(
+    "ДОМА / HOUSE-CONSTRUCTOR",
+    `
+    <h3>Дом №1</h3>
+    <p>Улица Основателей</p</script>
 </body>
 </html>
