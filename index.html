@@ -278,6 +278,64 @@ function closeModal() {
   document.getElementById("modal").style.display = "none";
   return 0;
 }
+const cityBranches = [
+  { id: "people", title: "ЖИТЕЛИ", text: "Жители города, профили, адреса и статусы." },
+  { id: "streets", title: "УЛИЦЫ", text: "Улица Основателей и будущие улицы профессий, интересов и идей." },
+  { id: "houses", title: "ДОМА", text: "Дома жителей. Активные дома светятся ярче." },
+  { id: "districts", title: "РАЙОНЫ", text: "Будущие районы города и объединения улиц." },
+  { id: "organizations", title: "ОРГАНИЗАЦИИ", text: "Фирмы, мастерские, лаборатории, сообщества и партнёры." },
+  { id: "institutes", title: "ИНСТИТУТЫ", text: "Институт Основания и будущие исследовательские центры." },
+  { id: "cities", title: "ГОРОДА", text: "УРАЛ-1, виртуальные города и цифровые двойники реальных городов." },
+  { id: "map", title: "КАРТА ГОРОДА", text: "Будущая карта улиц, домов, районов и организаций." },
+  { id: "documents", title: "ДОКУМЕНТЫ", text: "Хартия, Конституция, Декларация и кодексы проекта." },
+  { id: "archive", title: "АРХИВ", text: "История основания, документы, версии и важные материалы." },
+  { id: "media", title: "МЕДИА", text: "Фильм, киностудия, видео-вставки и визуальная история." },
+  { id: "ideas", title: "ИДЕИ", text: "Банк идей, предложений, проблем и решений." },
+  { id: "projects", title: "ПРОЕКТЫ", text: "Отдельные направления развития УРАЛ-1." },
+  { id: "history", title: "ИСТОРИЯ", text: "Летопись города, важные решения и этапы развития." },
+  { id: "future", title: "БУДУЩИЕ ВЕТКИ", text: "Резерв для новых направлений." }
+];
+function makeBranchButtons() {
+  let html = "";
+  for (let branch of cityBranches) {
+    html += `<button onclick="openBranch('${branch.id}')">${branch.title}</button> `;
+  }
+  return html;
+}
+function openConstructor() {
+  showModal(
+    "CITY-CONSTRUCTOR / АЛЬФА",
+    `
+    <h3>Дом Основателя</h3>
+    <p>
+      Дмитрий Копытов<br>
+      Улица Основателей, дом №1
+    </p>
+    <hr>
+    <p><b>Дерево конструктора:</b></p>
+    ${makeBranchButtons()}
+    `
+  );
+  return 0;
+}
+function openBranch(id) {
+  const branch = cityBranches.find(item => item.id === id);
+  if (!branch) {
+    showModal("Ошибка", "<p>Ветка не найдена.</p>");
+    return 0;
+  }
+  showModal(
+    branch.title,
+    `
+    <h3>${branch.title}</h3>
+    <p>${branch.text}</p>
+    <hr>
+    <button onclick="openConstructor()">НАЗАД В КОНСТРУКТОР</button>
+    <button onclick="alert('Позже здесь будет добавление объекта')">ДОБАВИТЬ</button>
+    `
+  );
+  return 0;
+}
 function lockedFunction() {
   showModal(
     "Управление городом",
@@ -290,123 +348,8 @@ function openInfo() {
     "INFO-001",
     `
     <p>УРАЛ-1 — виртуальный город исследований, анализа, логики и творчества.</p>
-    <p>Версия: V04</p>
+    <p>Версия: V05 / CITY-CONSTRUCTOR ARRAY</p>
     <p>Каркас города строится поэтапно.</p>
-    `
-  );
-  return 0;
-}
-function openConstructor() {
-  showModal(
-    "CITY-CONSTRUCTOR / АЛЬФА",
-    `
-    <h3>Дом Основателя</h3>
-    <p>
-      Дмитрий Копытов<br>
-      Улица Основателей, дом №1
-    </p>
-    <hr>
-    <p>Граничит с улицами:</p>
-    <ul>
-      <li>Поваров</li>
-      <li>Программистов</li>
-      <li>Философов</li>
-      <li>Водителей</li>
-    </ul>
-    <hr>
-    <p><b>Дерево конструктора:</b></p>
-    <button onclick="openStreets()">УЛИЦЫ</button>
-    <button onclick="openHouses()">ДОМА</button>
-    <button onclick="openPeople()">ЖИТЕЛИ</button>
-    <button onclick="openOrganizations()">ОРГАНИЗАЦИИ</button>
-    <button onclick="openInstitutes()">ИНСТИТУТЫ</button>
-    <button onclick="openMap()">КАРТА ГОРОДА</button>
-    `
-  );
-  return 0;
-}
-function openStreets() {
-  showModal(
-    "УЛИЦЫ / STREET-CONSTRUCTOR",
-    `
-    <h3>STREET-001</h3>
-    <p><b>Улица Основателей</b></p>
-    <p>Особая улица города УРАЛ-1.</p>
-    <p>Дом №1 — Дмитрий Копытов.</p>
-    <hr>
-    <button onclick="openConstructor()">НАЗАД В КОНСТРУКТОР</button>
-    <button onclick="alert('Позже здесь будет создание новой улицы')">ДОБАВИТЬ УЛИЦУ</button>
-    `
-  );
-  return 0;
-}
-function openHouses() {
-  showModal(
-    "ДОМА / HOUSE-CONSTRUCTOR",
-    `
-    <h3>HOUSE-001</h3>
-    <p><b>Дом №1</b></p>
-    <p>Улица Основателей</p>
-    <p>Житель: Дмитрий Копытов</p>
-    <p>Статус: Дом Основателя</p>
-    <p>Свет в окнах: яркий</p>
-    <hr>
-    <button onclick="openConstructor()">НАЗАД В КОНСТРУКТОР</button>
-    <button onclick="alert('Позже здесь будет создание нового дома')">ДОБАВИТЬ ДОМ</button>
-    `
-  );
-  return 0;
-}
-function openPeople() {
-  showModal(
-    "ЖИТЕЛИ / PEOPLE-CONSTRUCTOR",
-    `
-    <h3>Первый житель</h3>
-    <p><b>Дмитрий Копытов</b></p>
-    <p>Адрес: Улица Основателей, дом №1</p>
-    <p>Статус: Основатель проекта.</p>
-    <hr>
-    <button onclick="openConstructor()">НАЗАД В КОНСТРУКТОР</button>
-    <button onclick="alert('Позже здесь будет регистрация жителей')">ДОБАВИТЬ ЖИТЕЛЯ</button>
-    `
-  );
-  return 0;
-}
-function openOrganizations() {
-  showModal(
-    "ОРГАНИЗАЦИИ / ORG-CONSTRUCTOR",
-    `
-    <h3>Организации города</h3>
-    <p>Резерв для фирм, мастерских, лабораторий и сообществ.</p>
-    <hr>
-    <button onclick="openConstructor()">НАЗАД В КОНСТРУКТОР</button>
-    <button onclick="alert('Позже здесь будет создание организации')">ДОБАВИТЬ ОРГАНИЗАЦИЮ</button>
-    `
-  );
-  return 0;
-}
-function openInstitutes() {
-  showModal(
-    "ИНСТИТУТЫ / INSTITUTE-CONSTRUCTOR",
-    `
-    <h3>UNI-001</h3>
-    <p><b>Институт Основания</b></p>
-    <p>Первый зарезервированный институт УРАЛ-1.</p>
-    <hr>
-    <button onclick="openConstructor()">НАЗАД В КОНСТРУКТОР</button>
-    <button onclick="alert('Позже здесь будет создание института')">ДОБАВИТЬ ИНСТИТУТ</button>
-    `
-  );
-  return 0;
-}
-function openMap() {
-  showModal(
-    "КАРТА ГОРОДА",
-    `
-    <h3>Карта УРАЛ-1</h3>
-    <p>Здесь позже появится карта улиц, домов, районов и организаций.</p>
-    <hr>
-    <button onclick="openConstructor()">НАЗАД В КОНСТРУКТОР</button>
     `
   );
   return 0;
@@ -414,10 +357,7 @@ function openMap() {
 function openLogin() {
   showModal(
     "Вход в город",
-    `
-    <p>Раздел входа жителей зарезервирован.</p>
-    <p>Позже здесь будет регистрация по e-mail.</p>
-    `
+    "<p>Раздел входа жителей зарезервирован. Позже здесь будет регистрация.</p>"
   );
   return 0;
 }
@@ -431,42 +371,24 @@ function openDev(name) {
 function openCityInfo() {
   showModal(
     "О городе",
-    `
-    <p>УРАЛ-1 — живой виртуальный город, который строится постепенно.</p>
-    <p>Каждый дом, улица и институт будут частью общей карты.</p>
-    `
+    "<p>УРАЛ-1 — живой виртуальный город, который строится постепенно.</p>"
   );
   return 0;
 }
 function openInstitute() {
-  openInstitutes();
+  openBranch("institutes");
   return 0;
 }
 function openArchive() {
-  showModal(
-    "Архив Основания",
-    `
-    <p>Здесь будут храниться Хартия, Конституция, Декларация и история проекта.</p>
-    `
-  );
+  openBranch("archive");
   return 0;
 }
 function openStudio() {
-  showModal(
-    "Киностудия УРАЛ-1",
-    `
-    <p>Здесь будет развиваться проект фильма, медиа-вставки и визуальная история города.</p>
-    `
-  );
+  openBranch("media");
   return 0;
 }
 function openCityWalk() {
-  showModal(
-    "Прогулка по городу",
-    `
-    <p>Альфа-прогулка по улицам УРАЛ-1 будет добавлена позже.</p>
-    `
-  );
+  openBranch("map");
   return 0;
 }
 </script>
