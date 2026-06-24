@@ -155,7 +155,28 @@ button {
   color: #ffd66b;
   font-weight: bold;
 }
-@media (max-width: 700px) {
+/* ========================================= */
+/* BUTTON-SYSTEM-001 / КРУПНЫЕ КЛАВИШИ        */
+/* ========================================= */
+.modal-box {
+  max-width: 760px;
+}
+.branch-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+.branch-btn {
+  min-height: 56px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 214, 107, 0.45);
+  background: rgba(255, 214, 107, 0.12);
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+  @media (max-width: 700px) {
   .city-grid {
     grid-template-columns: 1fr;
   }
@@ -355,10 +376,11 @@ const cityBranches = [
 { id: "myHome", title: "МОЙ ДОМ / MEIN HAUS", text: "Личный дом или квартира жителя, его интересы, углы улиц и городские связи." },
 ];
 function makeBranchButtons() {
-  let html = "";
+  let html = '<div class="branch-buttons">';
   for (let branch of cityBranches) {
-    html += `<button onclick="openBranch('${branch.id}')">${branch.title}</button> `;
+    html += `<button class="branch-btn" onclick="openBranch('${branch.id}')">${branch.title}</button>`;
   }
+  html += '</div>';
   return html;
 }
 function openConstructor() {
@@ -389,8 +411,9 @@ function openBranch(id) {
     <h3>${branch.title}</h3>
     <p>${branch.text}</p>
     <hr>
-    <button onclick="openConstructor()">НАЗАД В КОНСТРУКТОР</button>
-    <button onclick="alert('Позже здесь будет добавление объекта')">ДОБАВИТЬ</button>
+<button class="action-btn" onclick="openConstructor()">НАЗАД</button>
+<button class="action-btn" onclick="alert('Позже здесь будет добавление объекта')">ДОБАВИТЬ</button>
+
     `
   );
   return 0;
