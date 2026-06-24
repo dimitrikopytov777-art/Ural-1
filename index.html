@@ -268,49 +268,33 @@ button {
   </div>
 </div>
 <script>
-/* ========================================= */
-/* FUNC-001 / ПОКАЗАТЬ ОКНО                  */
-/* ========================================= */
 function showModal(title, text) {
   document.getElementById("modalTitle").innerHTML = title;
   document.getElementById("modalText").innerHTML = text;
   document.getElementById("modal").style.display = "flex";
   return 0;
 }
-/* ========================================= */
-/* FUNC-002 / ЗАКРЫТЬ ОКНО                   */
-/* ========================================= */
 function closeModal() {
   document.getElementById("modal").style.display = "none";
   return 0;
 }
-/* ========================================= */
-/* FUNC-003 / ЗАКРЫТАЯ ФУНКЦИЯ               */
-/* CITY-HALL-001                             */
-/* ========================================= */
 function lockedFunction() {
+  showModal(
+    "Управление городом",
+    "<p>Раздел управления зарезервирован для основателя проекта.</p>"
+  );
   return 0;
 }
-/* ========================================= */
-/* FUNC-004 / INFO                           */
-/* ========================================= */
 function openInfo() {
   showModal(
     "INFO-001",
     `
-    <p>
-    УРАЛ-1 — виртуальный город исследований,
-    анализа, логики и творчества.
-    </p>
-    <p>
-    Версия: V03
-    </p>
-    <p>
-    Каркас города строится поэтапно.
-    </p>
+    <p>УРАЛ-1 — виртуальный город исследований, анализа, логики и творчества.</p>
+    <p>Версия: V04</p>
+    <p>Каркас города строится поэтапно.</p>
     `
   );
-  return 0; 
+  return 0;
 }
 function openConstructor() {
   showModal(
@@ -318,8 +302,8 @@ function openConstructor() {
     `
     <h3>Дом Основателя</h3>
     <p>
-    Дмитрий Копытов<br>
-    Улица Основателей, дом №1
+      Дмитрий Копытов<br>
+      Улица Основателей, дом №1
     </p>
     <hr>
     <p>Граничит с улицами:</p>
@@ -333,8 +317,10 @@ function openConstructor() {
     <p><b>Дерево конструктора:</b></p>
     <button onclick="openStreets()">УЛИЦЫ</button>
     <button onclick="openHouses()">ДОМА</button>
+    <button onclick="openPeople()">ЖИТЕЛИ</button>
     <button onclick="openOrganizations()">ОРГАНИЗАЦИИ</button>
     <button onclick="openInstitutes()">ИНСТИТУТЫ</button>
+    <button onclick="openMap()">КАРТА ГОРОДА</button>
     `
   );
   return 0;
@@ -343,8 +329,8 @@ function openStreets() {
   showModal(
     "УЛИЦЫ / STREET-CONSTRUCTOR",
     `
-    <h3>Улица Основателей</h3>
-    <p>STREET-001</p>
+    <h3>STREET-001</h3>
+    <p><b>Улица Основателей</b></p>
     <p>Особая улица города УРАЛ-1.</p>
     <p>Дом №1 — Дмитрий Копытов.</p>
     <hr>
@@ -358,7 +344,131 @@ function openHouses() {
   showModal(
     "ДОМА / HOUSE-CONSTRUCTOR",
     `
-    <h3>Дом №1</h3>
-    <p>Улица Основателей</p</script>
+    <h3>HOUSE-001</h3>
+    <p><b>Дом №1</b></p>
+    <p>Улица Основателей</p>
+    <p>Житель: Дмитрий Копытов</p>
+    <p>Статус: Дом Основателя</p>
+    <p>Свет в окнах: яркий</p>
+    <hr>
+    <button onclick="openConstructor()">НАЗАД В КОНСТРУКТОР</button>
+    <button onclick="alert('Позже здесь будет создание нового дома')">ДОБАВИТЬ ДОМ</button>
+    `
+  );
+  return 0;
+}
+function openPeople() {
+  showModal(
+    "ЖИТЕЛИ / PEOPLE-CONSTRUCTOR",
+    `
+    <h3>Первый житель</h3>
+    <p><b>Дмитрий Копытов</b></p>
+    <p>Адрес: Улица Основателей, дом №1</p>
+    <p>Статус: Основатель проекта.</p>
+    <hr>
+    <button onclick="openConstructor()">НАЗАД В КОНСТРУКТОР</button>
+    <button onclick="alert('Позже здесь будет регистрация жителей')">ДОБАВИТЬ ЖИТЕЛЯ</button>
+    `
+  );
+  return 0;
+}
+function openOrganizations() {
+  showModal(
+    "ОРГАНИЗАЦИИ / ORG-CONSTRUCTOR",
+    `
+    <h3>Организации города</h3>
+    <p>Резерв для фирм, мастерских, лабораторий и сообществ.</p>
+    <hr>
+    <button onclick="openConstructor()">НАЗАД В КОНСТРУКТОР</button>
+    <button onclick="alert('Позже здесь будет создание организации')">ДОБАВИТЬ ОРГАНИЗАЦИЮ</button>
+    `
+  );
+  return 0;
+}
+function openInstitutes() {
+  showModal(
+    "ИНСТИТУТЫ / INSTITUTE-CONSTRUCTOR",
+    `
+    <h3>UNI-001</h3>
+    <p><b>Институт Основания</b></p>
+    <p>Первый зарезервированный институт УРАЛ-1.</p>
+    <hr>
+    <button onclick="openConstructor()">НАЗАД В КОНСТРУКТОР</button>
+    <button onclick="alert('Позже здесь будет создание института')">ДОБАВИТЬ ИНСТИТУТ</button>
+    `
+  );
+  return 0;
+}
+function openMap() {
+  showModal(
+    "КАРТА ГОРОДА",
+    `
+    <h3>Карта УРАЛ-1</h3>
+    <p>Здесь позже появится карта улиц, домов, районов и организаций.</p>
+    <hr>
+    <button onclick="openConstructor()">НАЗАД В КОНСТРУКТОР</button>
+    `
+  );
+  return 0;
+}
+function openLogin() {
+  showModal(
+    "Вход в город",
+    `
+    <p>Раздел входа жителей зарезервирован.</p>
+    <p>Позже здесь будет регистрация по e-mail.</p>
+    `
+  );
+  return 0;
+}
+function openDev(name) {
+  showModal(
+    name,
+    "<p>Этот раздел зарезервирован для дальнейшего развития.</p>"
+  );
+  return 0;
+}
+function openCityInfo() {
+  showModal(
+    "О городе",
+    `
+    <p>УРАЛ-1 — живой виртуальный город, который строится постепенно.</p>
+    <p>Каждый дом, улица и институт будут частью общей карты.</p>
+    `
+  );
+  return 0;
+}
+function openInstitute() {
+  openInstitutes();
+  return 0;
+}
+function openArchive() {
+  showModal(
+    "Архив Основания",
+    `
+    <p>Здесь будут храниться Хартия, Конституция, Декларация и история проекта.</p>
+    `
+  );
+  return 0;
+}
+function openStudio() {
+  showModal(
+    "Киностудия УРАЛ-1",
+    `
+    <p>Здесь будет развиваться проект фильма, медиа-вставки и визуальная история города.</p>
+    `
+  );
+  return 0;
+}
+function openCityWalk() {
+  showModal(
+    "Прогулка по городу",
+    `
+    <p>Альфа-прогулка по улицам УРАЛ-1 будет добавлена позже.</p>
+    `
+  );
+  return 0;
+}
+</script>
 </body>
 </html>
