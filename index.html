@@ -1,0 +1,988 @@
+<!-- ========================================================= -->
+<!-- URAL-1 / INDEX.HTML / ALPHA ROBOT VERSION                 -->
+<!-- PART 1 OF 2 — HTML + CSS                                  -->
+<!-- Файлы рядом: city.jpg, seal.png                           -->
+<!-- ========================================================= -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>УРАЛ-1</title>
+<style>
+/* ========================================================= */
+/* CSS: ROOT / BASE                                           */
+/* ========================================================= */
+:root{
+  --gold:#ffe3a0;
+  --gold-soft:rgba(255,227,160,.82);
+  --line:rgba(255,220,150,.38);
+  --glass:rgba(31,24,19,.58);
+  --glass-blue:rgba(12,18,28,.48);
+  --dark:rgba(5,7,12,.78);
+  --blue:rgba(120,190,255,.18);
+}
+*{box-sizing:border-box}
+html,body{
+  margin:0;
+  min-height:100%;
+  font-family:Arial,Helvetica,sans-serif;
+  background:#05070c;
+  color:var(--gold);
+}
+body{
+  overflow-x:hidden;
+  cursor:none;
+}
+/* ========================================================= */
+/* CSS: CUSTOM CURSOR / INFO CURSOR                           */
+/* ========================================================= */
+#uralCursor{
+  position:fixed;
+  left:0;
+  top:0;
+  width:18px;
+  height:18px;
+  z-index:9999;
+  pointer-events:none;
+  border-radius:50%;
+  border:1px solid rgba(255,220,150,.9);
+  background:rgba(255,210,110,.15);
+  box-shadow:0 0 14px rgba(255,210,110,.55);
+  transform:translate(-50%,-50%);
+  transition:width .12s,height .12s,background .12s,border-color .12s;
+}
+#uralCursor.click{
+  width:28px;
+  height:28px;
+  background:rgba(255,220,150,.25);
+}
+#uralCursor.info{
+  width:34px;
+  height:34px;
+  border-color:rgba(135,205,255,.95);
+  box-shadow:0 0 18px rgba(120,190,255,.75);
+}
+/* ========================================================= */
+/* CSS: MAIN SCREEN                                           */
+/* ========================================================= */
+.ural-screen{
+  position:relative;
+  min-height:100vh;
+  overflow:hidden;
+  background:
+    linear-gradient(rgba(10,12,18,.16),rgba(6,7,12,.74)),
+    url("city.jpg") center/cover no-repeat;
+}
+.ural-screen:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:1;
+  background:
+    radial-gradient(circle at 18% 17%,rgba(255,205,120,.24),transparent 31%),
+    radial-gradient(circle at 72% 42%,rgba(120,190,255,.14),transparent 37%),
+    linear-gradient(180deg,rgba(255,255,255,.03),rgba(0,0,0,.30));
+  pointer-events:none;
+}
+/* ========================================================= */
+/* CSS: TITLE                                                 */
+/* ========================================================= */
+.ural-title{
+  position:absolute;
+  top:34px;
+  left:34px;
+  z-index:10;
+  display:flex;
+  align-items:center;
+  gap:22px;
+}
+.ural-seal-object{
+  position:relative;
+  width:122px;
+  height:122px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+}
+.ural-seal-object:before{
+  content:"";
+  position:absolute;
+  inset:-8px;
+  border-radius:50%;
+  border:1px solid rgba(255,220,150,.24);
+  background:rgba(80,58,30,.12);
+  box-shadow:0 0 24px rgba(255,205,120,.20),inset 0 0 20px rgba(255,255,255,.04);
+}
+.ural-seal{
+  position:relative;
+  z-index:2;
+  width:112px;
+  height:112px;
+  object-fit:contain;
+  opacity:.88;
+  filter:drop-shadow(0 0 18px rgba(255,205,120,.45)) drop-shadow(0 0 4px #000);
+  transition:.25s;
+}
+.ural-seal-object:hover .ural-seal{
+  transform:scale(1.06);
+  opacity:1;
+}
+.ural-title-text h1{
+  margin:0;
+  font-size:clamp(44px,7vw,96px);
+  letter-spacing:.08em;
+  color:rgba(255,226,155,.94);
+  text-shadow:0 0 18px rgba(255,190,90,.45),0 4px 18px #000;
+}
+.ural-title-text p{
+  margin:8px 0 0;
+  max-width:620px;
+  font-size:clamp(15px,2vw,22px);
+  color:rgba(244,226,190,.84);
+}
+/* ========================================================= */
+/* CSS: LANGUAGE                                              */
+/* ========================================================= */
+.lang-switch{
+  position:absolute;
+  top:28px;
+  right:28px;
+  z-index:20;
+  display:flex;
+  gap:8px;
+}
+.lang-btn{
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:9px 14px;
+  background:var(--glass);
+  color:var(--gold);
+  backdrop-filter:blur(10px);
+  font-weight:bold;
+}
+.lang-btn.active{
+  background:rgba(112,76,34,.72);
+  box-shadow:0 0 18px rgba(255,210,120,.25);
+}
+/* ========================================================= */
+/* CSS: RAYS                                                  */
+/* ========================================================= */
+.ray{
+  position:absolute;
+  z-index:4;
+  height:1px;
+  width:72vw;
+  background:linear-gradient(90deg,transparent,rgba(255,216,140,.64),transparent);
+  transform-origin:left center;
+  pointer-events:none;
+  opacity:.54;
+  filter:blur(.25px);
+}
+.ray-sun{top:22%;left:8%;transform:rotate(18deg)}
+.ray-tower-earth{top:31%;left:54%;transform:rotate(105deg)}
+.ray-processor{top:18%;left:12%;transform:rotate(34deg)}
+/* ========================================================= */
+/* CSS: MAIN BUTTONS                                          */
+/* ========================================================= */
+.main-actions{
+  position:absolute;
+  left:42px;
+  bottom:178px;
+  z-index:12;
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
+.main-btn{
+  min-width:246px;
+  padding:16px 24px;
+  border-radius:999px;
+  border:1px solid rgba(255,215,140,.46);
+  background:linear-gradient(135deg,rgba(84,58,28,.58),rgba(24,22,24,.42));
+  color:var(--gold);
+  font-size:18px;
+  font-weight:bold;
+  letter-spacing:.03em;
+  backdrop-filter:blur(10px);
+  box-shadow:inset 0 0 18px rgba(255,220,150,.10),0 8px 28px rgba(0,0,0,.45);
+  transition:.22s;
+}
+.main-btn:hover{
+  transform:translateX(8px);
+  background:linear-gradient(135deg,rgba(112,76,34,.68),rgba(34,31,32,.50));
+  box-shadow:inset 0 0 20px rgba(255,220,150,.20),0 0 22px rgba(255,200,100,.28);
+}
+/* ========================================================= */
+/* CSS: BOTTOM MENU                                           */
+/* ========================================================= */
+.bottom-menu{
+  position:absolute;
+  left:50%;
+  bottom:26px;
+  transform:translateX(-50%);
+  z-index:14;
+  width:min(1320px,calc(100% - 28px));
+  padding:15px 18px;
+  border-radius:30px;
+  border:1px solid rgba(255,220,150,.35);
+  background:linear-gradient(135deg,rgba(44,31,20,.62),rgba(12,18,28,.46));
+  backdrop-filter:blur(14px);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+  box-shadow:0 12px 40px rgba(0,0,0,.45),inset 0 0 22px rgba(255,220,150,.05);
+}
+.menu-icon{
+  width:82px;
+  height:82px;
+  border-radius:50%;
+  border:1px solid rgba(255,225,155,.46);
+  background:radial-gradient(circle at 35% 25%,rgba(255,231,170,.16),transparent 34%),rgba(84,61,33,.42);
+  color:#ffe4a4;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  font-size:11px;
+  line-height:1.1;
+  text-align:center;
+  transition:.22s;
+}
+.menu-icon span{
+  width:34px;
+  height:34px;
+  display:grid;
+  place-items:center;
+  font-size:24px;
+  border-radius:50%;
+  background:rgba(255,225,155,.08);
+}
+.menu-icon:hover{
+  transform:translateY(-7px) scale(1.04);
+  background:radial-gradient(circle at 35% 25%,rgba(255,231,170,.24),transparent 36%),rgba(110,78,36,.62);
+  box-shadow:0 0 20px rgba(255,210,120,.30);
+}
+/* ========================================================= */
+/* CSS: HOTSPOTS / TOOLTIP                                    */
+/* ========================================================= */
+.hotspot{
+  position:absolute;
+  z-index:15;
+  border-radius:18px;
+  border:1px solid transparent;
+  background:transparent;
+  transition:.22s;
+}
+.hotspot:hover{
+  border-color:rgba(255,220,150,.36);
+  background:rgba(255,220,150,.06);
+  box-shadow:0 0 18px rgba(255,220,150,.16);
+}
+.hotspot-seal{top:24px;left:24px;width:150px;height:150px}
+.hotspot-core{top:30%;left:46%;width:18%;height:24%}
+.hotspot-sky{top:12%;left:36%;width:32%;height:18%}
+.info-tooltip{
+  position:fixed;
+  z-index:9998;
+  display:none;
+  max-width:320px;
+  padding:12px 14px;
+  border-radius:16px;
+  border:1px solid rgba(255,220,150,.34);
+  background:rgba(22,18,16,.88);
+  color:rgba(255,236,198,.95);
+  backdrop-filter:blur(10px);
+  box-shadow:0 10px 28px rgba(0,0,0,.48);
+  font-size:14px;
+  line-height:1.42;
+  pointer-events:none;
+}
+.info-tooltip.active{display:block}
+/* ========================================================= */
+/* CSS: OBJECT WINDOW                                         */
+/* ========================================================= */
+.object-layer{
+  position:fixed;
+  inset:0;
+  z-index:80;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:rgba(3,4,8,.68);
+  backdrop-filter:blur(8px);
+}
+.object-layer.active{display:flex}
+.object-card{
+  width:min(900px,100%);
+  max-height:calc(100vh - 48px);
+  overflow:auto;
+  padding:28px;
+  border-radius:30px;
+  border:1px solid rgba(255,220,150,.38);
+  background:linear-gradient(135deg,rgba(45,32,21,.90),rgba(12,19,28,.88));
+  box-shadow:0 0 44px rgba(0,0,0,.65),inset 0 0 22px rgba(255,220,150,.06);
+}
+.object-card h2{margin:0 0 12px;color:var(--gold)}
+.object-card p{margin:0 0 16px;line-height:1.55;color:rgba(255,238,205,.88)}
+.object-grid{
+  display:grid;
+  grid-template-columns:220px 1fr;
+  gap:26px;
+  align-items:start;
+}
+.object-image{
+  width:220px;
+  height:220px;
+  object-fit:contain;
+  opacity:.94;
+  filter:drop-shadow(0 0 18px rgba(255,205,120,.35));
+}
+.object-close{
+  border:1px solid rgba(255,220,150,.4);
+  background:rgba(80,58,30,.65);
+  color:var(--gold);
+  border-radius:999px;
+  padding:12px 22px;
+  transition:.22s;
+}
+.object-close:hover{
+  background:rgba(112,76,34,.78);
+  box-shadow:0 0 18px rgba(255,210,120,.22);
+}
+/* ========================================================= */
+/* CSS: MOBILE                                                */
+/* ========================================================= */
+@media(max-width:760px){
+  body{cursor:auto}
+  #uralCursor{display:none}
+  .ural-screen{
+    min-height:100dvh;
+    overflow-y:auto;
+    padding-bottom:250px;
+  }
+  .ural-title{
+    position:relative;
+    top:auto;
+    left:auto;
+    padding:22px 18px 0;
+    gap:14px;
+  }
+  .ural-seal-object{width:86px;height:86px}
+  .ural-seal{width:78px;height:78px}
+  .ural-title-text h1{font-size:42px}
+  .ural-title-text p{font-size:15px}
+  .lang-switch{
+    top:16px;
+    right:16px;
+  }
+  .main-actions{
+    position:relative;
+    left:auto;
+    bottom:auto;
+    z-index:20;
+    padding:32px 18px 0;
+  }
+  .main-btn{
+    width:100%;
+    min-width:0;
+  }
+  .bottom-menu{
+    position:fixed;
+    bottom:12px;
+    width:calc(100% - 18px);
+    padding:12px;
+    gap:9px;
+    max-height:210px;
+    overflow-y:auto;
+  }
+  .menu-icon{
+    width:68px;
+    height:68px;
+    font-size:10px;
+  }
+  .menu-icon span{
+    width:28px;
+    height:28px;
+    font-size:20px;
+  }
+  .hotspot{display:none}
+  .object-grid{
+    grid-template-columns:1fr;
+    text-align:center;
+  }
+  .object-image{margin:auto}
+}
+</style>
+</head>
+<body>
+<!-- ========================================================= -->
+<!-- HTML: SYSTEM OBJECTS                                      -->
+<!-- ========================================================= -->
+<div id="uralCursor"></div>
+<div class="info-tooltip" id="infoTooltip"></div>
+<!-- ========================================================= -->
+<!-- HTML: MAIN                                                -->
+<!-- ========================================================= -->
+<main class="ural-screen" id="uralScreen">
+  <div class="ray ray-sun"></div>
+  <div class="ray ray-tower-earth"></div>
+  <div class="ray ray-processor"></div>
+  <button class="hotspot hotspot-seal info-zone" data-object="seal"></button>
+  <button class="hotspot hotspot-core info-zone" data-object="academy"></button>
+  <button class="hotspot hotspot-sky info-zone" data-object="tour"></button>
+  <div class="lang-switch">
+    <button class="lang-btn active" id="langRu" data-lang="ru">RU</button>
+    <button class="lang-btn" id="langDe" data-lang="de">DE</button>
+  </div>
+  <section class="ural-title">
+    <div class="ural-seal-object info-zone" data-object="seal">
+      <img class="ural-seal" src="seal.png" alt="Печать УРАЛ-1">
+    </div>
+    <div class="ural-title-text">
+      <h1>УРАЛ-1</h1>
+      <p id="dailyMotto">Город начинается с решения.</p>
+    </div>
+  </section>
+  <section class="main-actions">
+    <button class="main-btn info-zone" data-object="resident" data-i18n="resident">Войти как житель</button>
+    <button class="main-btn info-zone" data-object="guest" data-i18n="guest">Войти как гость</button>
+    <button class="main-btn info-zone" data-object="tour" data-i18n="tour">Экскурсия</button>
+    <button class="main-btn info-zone" data-object="exit" data-i18n="exit">Выход</button>
+  </section>
+  <nav class="bottom-menu" id="bottomMenu"></nav>
+</main>
+<!-- ========================================================= -->
+<!-- HTML: UNIVERSAL OBJECT WINDOW                             -->
+<!-- ========================================================= -->
+<div class="object-layer" id="objectLayer">
+  <div class="object-card" id="objectCard"></div>
+</div>
+<!-- ========================================================= -->
+<!-- JS: DATA / REGISTRIES / ROBOT READY                       -->
+<!-- PART 2 начинается здесь                                  -->
+<!-- ========================================================= -->
+<script>
+/* ========================================================= */
+/* DATA: SYSTEM STATE                                         */
+/* ========================================================= */
+let URAL_LANG = "ru";
+/* ========================================================= */
+/* DATA: LANGUAGE REGISTRY                                    */
+/* ========================================================= */
+const LANG_REGISTRY = {
+  ru: {
+    close: "Закрыть",
+    resident: "Войти как житель",
+    guest: "Войти как гость",
+    tour: "Экскурсия",
+    exit: "Выход",
+    motto: [
+      "Город начинается с решения.",
+      "Задача на земле рождает модель на небе.",
+      "Сначала архитектура, потом движение.",
+      "Память города ничего не забывает.",
+      "Луч показывает направление мысли."
+    ]
+  },
+  de: {
+    close: "Schließen",
+    resident: "Als Einwohner eintreten",
+    guest: "Als Gast eintreten",
+    tour: "Tour",
+    exit: "Ausgang",
+    motto: [
+      "Die Stadt beginnt mit einer Entscheidung.",
+      "Eine Aufgabe auf der Erde wird zum Modell am Himmel.",
+      "Zuerst Architektur, dann Bewegung.",
+      "Das Gedächtnis der Stadt vergisst nichts.",
+      "Der Strahl zeigt die Richtung des Denkens."
+    ]
+  }
+};
+/* ========================================================= */
+/* DATA: OBJECT REGISTRY                                      */
+/* ========================================================= */
+const OBJECT_REGISTRY = {
+  resident: {
+    icon: "🏠",
+    ru: {
+      title: "Вход как житель",
+      info: "Будущий вход жителя: профиль, дом, история действий и документы.",
+      text: [
+        "Здесь появится личный вход жителя: профиль, дом, история действий, документы, связи и участие в жизни города."
+      ]
+    },
+    de: {
+      title: "Einwohner-Zugang",
+      info: "Zukünftiger Einwohner-Zugang: Profil, Haus, Verlauf und Dokumente.",
+      text: [
+        "Hier entsteht der persönliche Zugang: Profil, Haus, Verlauf, Dokumente, Verbindungen und Teilnahme am Stadtleben."
+      ]
+    }
+  },
+  guest: {
+    icon: "👤",
+    ru: {
+      title: "Вход как гость",
+      info: "Гостевой вход: просмотр города без регистрации.",
+      text: [
+        "Гость сможет смотреть город, проходить экскурсию и знакомиться с основными разделами без регистрации."
+      ]
+    },
+    de: {
+      title: "Gastzugang",
+      info: "Gastzugang: Stadt ansehen ohne Registrierung.",
+      text: [
+        "Ein Gast kann die Stadt ansehen, die Tour starten und die Hauptbereiche ohne Registrierung kennenlernen."
+      ]
+    }
+  },
+  tour: {
+    icon: "🎬",
+    ru: {
+      title: "Экскурсия по УРАЛ-1",
+      info: "Экскурсия покажет город, печать, Академию, архив и конструктор.",
+      text: [
+        "Это демонстрационная экскурсия по первой альфа-версии города.",
+        "Маршрут: главный экран, печать, Академия, Архив, Конструктор, Карта и Институты."
+      ]
+    },
+    de: {
+      title: "Tour durch URAL-1",
+      info: "Die Tour zeigt Stadt, Siegel, Akademie, Archiv und Konstruktor.",
+      text: [
+        "Dies ist eine Demo-Tour durch die erste Alpha-Version der Stadt.",
+        "Route: Startbildschirm, Siegel, Akademie, Archiv, Konstruktor, Karte und Institute."
+      ]
+    }
+  },
+  exit: {
+    icon: "🚪",
+    ru: {
+      title: "Выход",
+      info: "Демонстрационная кнопка выхода.",
+      text: [
+        "Пока это демонстрационная кнопка. В будущем она будет закрывать активные окна или возвращать пользователя на старт."
+      ]
+    },
+    de: {
+      title: "Ausgang",
+      info: "Demo-Taste für den Ausgang.",
+      text: [
+        "Zurzeit ist dies eine Demo-Taste. Später schließt sie aktive Fenster oder kehrt zum Start zurück."
+      ]
+    }
+  },
+  seal: {
+    icon: "◎",
+    image: "seal.png",
+    ru: {
+      title: "Печать УРАЛ-1",
+      info: "Печать УРАЛ-1: символ процессора, памяти, входа и выхода.",
+      text: [
+        "Печать УРАЛ-1 — первый знак системы. В обычном режиме она работает как символ города.",
+        "В экскурсии она станет картой процессора: вход, выход, лучи, память, Академия и сферическая модель."
+      ]
+    },
+    de: {
+      title: "Siegel URAL-1",
+      info: "Siegel URAL-1: Symbol für Prozessor, Speicher, Eingang und Ausgang.",
+      text: [
+        "Das Siegel URAL-1 ist das erste Zeichen des Systems. Im normalen Modus ist es ein Symbol der Stadt.",
+        "In der Tour wird es zur Prozessorkarte: Eingang, Ausgang, Strahlen, Speicher, Akademie und sphärisches Modell."
+      ]
+    }
+  },
+  constitution: {
+    icon: "📜",
+    ru: {
+      title: "Конституция",
+      info: "Правила, принципы и документы города.",
+      text: [
+        "Здесь будет храниться хартия, правила, принципы и документы основания виртуального города УРАЛ-1."
+      ]
+    },
+    de: {
+      title: "Verfassung",
+      info: "Regeln, Prinzipien und Dokumente der Stadt.",
+      text: [
+        "Hier werden Charta, Regeln, Prinzipien und Gründungsdokumente der virtuellen Stadt URAL-1 gespeichert."
+      ]
+    }
+  },
+  academy: {
+    icon: "🏛",
+    ru: {
+      title: "Академия",
+      info: "Центр знаний, институтов и анализа.",
+      text: [
+        "Академия — верхний слой знаний, институтов, анализа и постановки задач."
+      ]
+    },
+    de: {
+      title: "Akademie",
+      info: "Zentrum für Wissen, Institute und Analyse.",
+      text: [
+        "Die Akademie ist die obere Ebene für Wissen, Institute, Analyse und Aufgabenstellung."
+      ]
+    }
+  },
+  map: {
+    icon: "🗺",
+    ru: {
+      title: "Карта",
+      info: "Улицы, дома, районы и объекты.",
+      text: [
+        "Карта будет показывать дома, улицы, районы, активные объекты, историю изменений и связи."
+      ]
+    },
+    de: {
+      title: "Karte",
+      info: "Straßen, Häuser, Bezirke und Objekte.",
+      text: [
+        "Die Karte zeigt Häuser, Straßen, Bezirke, aktive Objekte, Verlauf und Verbindungen."
+      ]
+    }
+  },
+  archive: {
+    icon: "🗃",
+    ru: {
+      title: "Архив",
+      info: "Память города и история изменений.",
+      text: [
+        "Архив — память города. Сюда попадают документы, идеи, версии, события и Verlauf."
+      ]
+    },
+    de: {
+      title: "Archiv",
+      info: "Gedächtnis der Stadt und Änderungsgeschichte.",
+      text: [
+        "Das Archiv ist das Gedächtnis der Stadt. Hier landen Dokumente, Ideen, Versionen, Ereignisse und Verlauf."
+      ]
+    }
+  },
+  constructor: {
+    icon: "⚙️",
+    ru: {
+      title: "Конструктор",
+      info: "Рабочий модуль создания объектов.",
+      text: [
+        "Здесь будет открываться рабочий модуль создания объектов города. Логику конструктора подключим отдельной программой."
+      ]
+    },
+    de: {
+      title: "Konstruktor",
+      info: "Arbeitsmodul zum Erstellen von Objekten.",
+      text: [
+        "Hier öffnet sich das Arbeitsmodul zum Erstellen von Stadtobjekten. Die Logik wird als eigenes Programm verbunden."
+      ]
+    }
+  },
+  help: {
+    icon: "ℹ️",
+    ru: {
+      title: "Справочная",
+      info: "Подсказки и навигация по системе.",
+      text: [
+        "Справочное бюро объясняет разделы, кнопки, маршрут пользователя и текущие возможности альфа-версии."
+      ]
+    },
+    de: {
+      title: "Auskunft",
+      info: "Hinweise und Navigation im System.",
+      text: [
+        "Die Auskunft erklärt Bereiche, Tasten, den Benutzerweg und die aktuellen Möglichkeiten der Alpha-Version."
+      ]
+    }
+  },
+  poster: {
+    icon: "🎭",
+    ru: {
+      title: "Афиша",
+      info: "События, объявления и публикации.",
+      text: [
+        "Афиша будет показывать события, объявления, публикации и будущие городские новости."
+      ]
+    },
+    de: {
+      title: "Plakat",
+      info: "Ereignisse, Anzeigen und Publikationen.",
+      text: [
+        "Das Plakat zeigt Ereignisse, Anzeigen, Publikationen und zukünftige Stadtnachrichten."
+      ]
+    }
+  },
+  notices: {
+    icon: "📌",
+    ru: {
+      title: "Объявления",
+      info: "Городская доска сообщений.",
+      text: [
+        "Городская доска сообщений. Позже сюда вставим фотографии и живые карточки."
+      ]
+    },
+    de: {
+      title: "Anzeigen",
+      info: "Städtische Nachrichtentafel.",
+      text: [
+        "Städtische Nachrichtentafel. Später kommen Fotos und lebendige Karten hinzu."
+      ]
+    }
+  },
+  infopoint: {
+    icon: "🔎",
+    ru: {
+      title: "Инфопункт",
+      info: "Краткая справка о городе.",
+      text: [
+        "Быстрый информационный пункт: что это за город, куда нажимать и что уже работает."
+      ]
+    },
+    de: {
+      title: "Infopunkt",
+      info: "Kurze Information über die Stadt.",
+      text: [
+        "Schneller Infopunkt: was diese Stadt ist, wohin man klickt und was schon funktioniert."
+      ]
+    }
+  },
+  improve: {
+    icon: "✨",
+    ru: {
+      title: "Улучшить",
+      info: "Будущий режим доработки объекта.",
+      text: [
+        "Будущий режим: выбрать объект, предложить улучшение и отправить задачу роботу."
+      ]
+    },
+    de: {
+      title: "Verbessern",
+      info: "Zukünftiger Modus zur Objektverbesserung.",
+      text: [
+        "Zukünftiger Modus: Objekt wählen, Verbesserung vorschlagen und Aufgabe an den Roboter senden."
+      ]
+    }
+  }
+};
+/* ========================================================= */
+/* DATA: PROGRAM / WINDOW / ROBOT REGISTRY                    */
+/* ========================================================= */
+const PROGRAM_REGISTRY = {
+  main: "Главный экран",
+  tour: "Экскурсия",
+  constructor: "Конструктор",
+  archive: "Архив",
+  academy: "Академия",
+  map: "Карта"
+};
+const WINDOW_REGISTRY = {
+  universalObjectWindow: "objectLayer"
+};
+const PHOTO_REGISTRY = {
+  cityBackground: "city.jpg",
+  seal: "seal.png"
+};
+const HOTSPOT_REGISTRY = ["seal", "academy", "tour"];
+const ROBOT_TASK_QUEUE = [
+  "Подключить реальные фотографии к PHOTO_REGISTRY",
+  "Подключить конструктор как отдельную программу",
+  "Сделать экскурсию с подсветкой объектов",
+  "Разнести CSS/JS/DATA по библиотекам"
+];
+const BOTTOM_MENU_OBJECTS = [
+  "poster",
+  "notices",
+  "constitution",
+  "academy",
+  "map",
+  "archive",
+  "constructor",
+  "help",
+  "infopoint",
+  "improve"
+];
+/* ========================================================= */
+/* MAIN                                                       */
+/* ========================================================= */
+function main(){
+  buildBottomMenu();
+  bindLanguageButtons();
+  bindObjectClicks();
+  bindCursor();
+  bindTooltip();
+  updateLanguage("ru");
+  bindCloseEvents();
+  console.log("URAL-1 alpha robot version loaded.");
+}
+/* ========================================================= */
+/* UI: BUILD MENU                                             */
+/* ========================================================= */
+function buildBottomMenu(){
+  const menu = document.getElementById("bottomMenu");
+  menu.innerHTML = "";
+  BOTTOM_MENU_OBJECTS.forEach(id=>{
+    const obj = OBJECT_REGISTRY[id];
+    const btn = document.createElement("button");
+    btn.className = "menu-icon info-zone";
+    btn.dataset.object = id;
+    btn.innerHTML = `<span>${obj.icon}</span><b data-menu-title="${id}"></b>`;
+    menu.appendChild(btn);
+  });
+}
+/* ========================================================= */
+/* UI: LANGUAGE                                               */
+/* ========================================================= */
+function bindLanguageButtons(){
+  document.querySelectorAll("[data-lang]").forEach(btn=>{
+    btn.addEventListener("click",()=>updateLanguage(btn.dataset.lang));
+  });
+}
+function updateLanguage(lang){
+  URAL_LANG = lang;
+  document.documentElement.lang = lang;
+  document.getElementById("langRu").classList.toggle("active",lang==="ru");
+  document.getElementById("langDe").classList.toggle("active",lang==="de");
+  document.querySelectorAll("[data-i18n]").forEach(el=>{
+    const key = el.dataset.i18n;
+    if(LANG_REGISTRY[lang][key]){
+      el.textContent = LANG_REGISTRY[lang][key];
+    }
+  });
+  document.querySelectorAll("[data-menu-title]").forEach(el=>{
+    const id = el.dataset.menuTitle;
+    el.textContent = OBJECT_REGISTRY[id][lang].title;
+  });
+  const list = LANG_REGISTRY[lang].motto;
+  document.getElementById("dailyMotto").textContent =
+    list[new Date().getDate() % list.length];
+}
+/* ========================================================= */
+/* UI: OBJECTS                                                */
+/* ========================================================= */
+function bindObjectClicks(){
+  document.addEventListener("click",e=>{
+    const target = e.target.closest("[data-object]");
+    if(!target) return;
+    openObject(target.dataset.object);
+  });
+}
+function openObject(id){
+  const obj = OBJECT_REGISTRY[id];
+  if(!obj) return;
+  const data = obj[URAL_LANG] || obj.ru;
+  const img = obj.image
+    ? `<img class="object-image" src="${obj.image}" alt="${data.title}">`
+    : "";
+  document.getElementById("objectCard").innerHTML = `
+    <div class="${obj.image ? "object-grid" : ""}">
+      ${img}
+      <div>
+        <h2>${data.title}</h2>
+        ${data.text.map(t=>`<p>${t}</p>`).join("")}
+        <button class="object-close" onclick="closeObject()">
+          ${LANG_REGISTRY[URAL_LANG].close}
+        </button>
+      </div>
+    </div>
+  `;
+  document.getElementById("objectLayer").classList.add("active");
+}
+function closeObject(){
+  document.getElementById("objectLayer").classList.remove("active");
+}
+/* ========================================================= */
+/* UI: TOOLTIP                                                */
+/* ========================================================= */
+function bindTooltip(){
+  const tooltip = document.getElementById("infoTooltip");
+  document.addEventListener("mousemove",e=>{
+    if(tooltip.classList.contains("active")){
+      tooltip.style.left = (e.clientX + 20) + "px";
+      tooltip.style.top = (e.clientY + 20) + "px";
+    }
+  });
+  document.addEventListener("mouseover",e=>{
+    const target = e.target.closest(".info-zone");
+    if(!target) return;
+    const objId = target.dataset.object;
+    if(!objId || !OBJECT_REGISTRY[objId]) return;
+    tooltip.textContent = OBJECT_REGISTRY[objId][URAL_LANG].info;
+    tooltip.classList.add("active");
+  });
+  document.addEventListener("mouseout",e=>{
+    if(e.target.closest(".info-zone")){
+      tooltip.classList.remove("active");
+    }
+  });
+}
+/* ========================================================= */
+/* UI: CURSOR                                                 */
+/* ========================================================= */
+function bindCursor(){
+  const cursor = document.getElementById("uralCursor");
+  document.addEventListener("mousemove",e=>{
+    cursor.style.left = e.clientX + "px";
+    cursor.style.top = e.clientY + "px";
+  });
+  document.addEventListener("mouseover",e=>{
+    if(e.target.closest("button,[data-object]")){
+      cursor.classList.add("click");
+    }
+    if(e.target.closest(".info-zone")){
+      cursor.classList.add("info");
+    }
+  });
+  document.addEventListener("mouseout",e=>{
+    if(e.target.closest("button,[data-object]")){
+      cursor.classList.remove("click");
+    }
+    if(e.target.closest(".info-zone")){
+      cursor.classList.remove("info");
+    }
+  });
+}
+/* ========================================================= */
+/* UI: CLOSE EVENTS                                           */
+/* ========================================================= */
+function bindCloseEvents(){
+  document.getElementById("objectLayer").addEventListener("click",e=>{
+    if(e.target.id === "objectLayer"){
+      closeObject();
+    }
+  });
+  document.addEventListener("keydown",e=>{
+    if(e.key === "Escape"){
+      closeObject();
+    }
+  });
+}
+/* ========================================================= */
+/* ROBOT: FUTURE MARKERS                                      */
+/* ========================================================= */
+/*
+PROGRAM_REGISTRY
+WINDOW_REGISTRY
+OBJECT_REGISTRY
+PHOTO_REGISTRY
+HOTSPOT_REGISTRY
+LANG_REGISTRY
+DATA_REGISTRY
+ROBOT_TASK_QUEUE
+VERLAUF
+TOUR_MODE
+CONSTRUCTOR_MODE
+ARCHIVE_MODE
+*/
+/* ========================================================= */
+/* START                                                      */
+/* ========================================================= */
+main();
+</script>
+</body>
+</html>
+
