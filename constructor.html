@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>УРАЛ-1 — Object Constructor 2</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#050914;color:white;overflow:hidden}
+button,input,select,textarea{font-family:inherit}
+button{cursor:pointer}
+.app{display:grid;grid-template-columns:390px 1fr;height:100vh}
+.panel{background:#07101f;border-right:1px solid #ffd66b;padding:14px;overflow-y:auto}
+.panel h1{margin:0;color:#ffd66b;font-size:24px}
+.panel p{color:#b8c7e0;font-size:14px;line-height:1.4}
+.group{border-top:1px solid #24344f;margin-top:14px;padding-top:12px}
+.group h2{font-size:16px;color:#ffd66b;margin:0 0 10px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+button{padding:10px;border-radius:10px;border:1px solid #35527c;background:#0e1a30;color:white}
+button:hover{border-color:#ffd66b;color:#ffd66b}
+.big{font-size:17px;padding:14px}
+.full{width:100%;margin:5px 0}
+.good{border-color:#2f8b55}.danger{border-color:#8b2f2f}
+label{display:block;color:#b8c7e0;font-size:13px;margin-top:8px}
+input,select,textarea{width:100%;margin-top:4px;padding:10px;border-radius:8px;border:1px solid #35527c;background:#0b1426;color:white}
+textarea{min-height:95px;resize:vertical}
+.selected-card{position:sticky;top:0;background:#101c33;border:1px solid #ffd66b;border-radius:14px;padding:12px;margin:12px 0;z-index:5}
+.selected-card h2{margin:0;color:#ffd66b;font-size:18px}
+.selected-card small{color:#b8c7e0}
+.work{display:grid;grid-template-rows:auto 1fr 120px;height:100vh}
+.top{background:#091526;border-bottom:1px solid #24344f;padding:10px;display:flex;gap:8px;flex-wrap:wrap}
+.stage-wrap{overflow:auto;padding:20px}
+.stage{position:relative;width:1400px;height:850px;border:1px solid #2d4568;border-radius:22px;background:#081222;overflow:hidden}
+.obj{position:absolute;border:1px solid #ffd66b;background:rgba(16,28,51,.9);color:#ffd66b;border-radius:14px;padding:12px;min-width:80px;min-height:50px;user-select:none;touch-action:none;background-size:cover;background-position:center}
+.obj.active{outline:4px solid rgba(255,214,107,.55)}
+.obj.dragging{opacity:.75}
+.obj .caption{background:rgba(0,0,0,.45);padding:4px;border-radius:8px}
+.resize-handle{position:absolute;right:-8px;bottom:-8px;width:22px;height:22px;border-radius:50%;background:#ffd66b;border:2px solid #07101f;cursor:nwse-resize}
+.log{background:#07101f;border-top:1px solid #24344f;padding:10px;overflow:auto;color:#b8c7e0;font-size:13px}
+.glow{box-shadow:0 0 28px rgba(255,214,107,.7)}
+.gold{background:#ffd66b!important;color:#07101f!important}
+.dark{background:rgba(0,0,0,.75)!important}
+.round{border-radius:999px!important}
+.soft{opacity:.7}
+.large{font-size:24px;padding:22px}
+@media(max-width:850px){
+ body{overflow:auto}
+ .app{grid-template-columns:1fr;height:auto}
+ .work{height:auto}
+ .stage{width:1000px;height:760px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="panel">
+<h1>Object Constructor 2</h1>
+<p>Создай объект — и слева сразу редактируй. Всё на экране является объектом.</p>
+<div class="selected-card">
+<h2 id="selName">Ничего не выбрано</h2>
+<small id="selInfo">Создай или выбери объект</small>
+</div>
+<div id="createPanel">
+<div class="group">
+<h2>Создать объект</h2>
+<div class="grid">
+<button class="big" onclick="createObj('scene')">🎬 Сцена</button>
+<button class="big" onclick="createObj('window')">⬛ Окно</button>
+<button class="big" onclick="createObj('button')">🔘 Кнопка</button>
+<button class="big" onclick="createObj('text')">✍️ Текст</button>
+<button class="big" onclick="createObj('image')">🖼 Фото</button>
+<button class="big" onclick="createObj('video')">🎥 Видео</button>
+<button class="big" onclick="createObj('document')">📄 Документ</button>
+<button class="big" onclick="createObj('archive')">🗄 Архив</button>
+<button class="big" onclick="createObj('institute')">🏛 Институт</button>
+<button class="big" onclick="createObj('house')">🏠 Дом</button>
+<button class="big" onclick="createObj('street')">🛣 Улица</button>
+<button class="big" onclick="createObj('tool')">🛠 Инструмент</button>
+</div>
+</div>
+<div class="group">
+<h2>Быстрые заготовки</h2>
+<button class="full big" onclick="createFirstScene()">🌆 Первая городская сцена</button>
+<button class="full" onclick="createFullscreen('scene')">▣ Объект на весь экран</button>
+<button class="full" onclick="createTemplateCopy()">⧉ Новый по шаблону</button>
+</div>
+</div>
+<div id="editPanel" style="display:none">
+<div class="group">
+<h2>Редактор объекта</h2>
+<label>ID</label><input id="eId">
+<label>Название</label><input id="eTitle">
+<label>Тип объекта</label>
+<select id="eType">
+<option value="scene">Сцена</option>
+<option value="window">Окно</option>
+<option value="button">Кнопка</option>
+<option value="text">Текст</option>
+<option value="image">Фото / картинка</option>
+<option value="video">Видео</option>
+<option value="document">Документ</option>
+<option value="archive">Архив</option>
+<option value="institute">Институт</option>
+<option value="house">Дом</option>
+<option value="street">Улица</option>
+<option value="tool">Инструмент</option>
+</select>
+<label>Статус</label>
+<select id="eStatus">
+<option value="new idea">Новая идея</option>
+<option value="research">Исследование</option>
+<option value="architectural design">Архитектура</option>
+<option value="planned">В плане</option>
+<option value="in development">В разработке</option>
+<option value="implemented">Реализовано</option>
+<option value="archived">Архив</option>
+</select>
+<label>Описание / инфо объекта</label>
+<textarea id="eText"></textarea>
+<label>Файл картинки / видео / ссылка</label>
+<input id="eFile" placeholder="city.jpg или assets/images/button.jpg">
+<button class="full big good" onclick="saveEdit()">💾 Сохранить объект</button>
+<button class="full" onclick="makeFullscreen()">▣ Сделать во весь экран</button>
+<button class="full" onclick="saveAsTemplate()">☆ Запомнить размер как шаблон</button>
+<button class="full" onclick="duplicateObj()">⧉ Дублировать</button>
+<button class="full" onclick="bringFront()">⬆ На передний план</button>
+<button class="full" onclick="sendBack()">⬇ На задний план</button>
+<button class="full danger" onclick="deleteObj()">✖ Удалить</button>
+<button class="full" onclick="backToCreate()">← Назад к созданию</button>
+</div>
+<div class="group">
+<h2>Оформление</h2>
+<div class="grid">
+<button onclick="toggleFx('glow')">✨ Свет</button>
+<button onclick="toggleFx('gold')">🟡 Золото</button>
+<button onclick="toggleFx('dark')">🌑 Тёмно</button>
+<button onclick="toggleFx('round')">⚪ Кругло</button>
+<button onclick="toggleFx('soft')">🌫 Мягко</button>
+<button onclick="toggleFx('large')">🔎 Крупно</button>
+</div>
+</div>
+<div class="group">
+<h2>Проверки</h2>
+<button class="full" onclick="setStatus('architectural design')">⚖ Конституция</button>
+<button class="full" onclick="setStatus('planned')">🏗 Архитектура</button>
+<button class="full good" onclick="setStatus('implemented')">✅ Реализовано</button>
+<button class="full" onclick="setStatus('archived')">🗄 Архивный статус</button>
+</div>
+</div>
+<div class="group">
+<h2>Сохранение</h2>
+<button class="full good" onclick="saveProject()">💾 Сохранить проект</button>
+<button class="full" onclick="loadProject()">📂 Загрузить</button>
+<button class="full" onclick="exportJson()">📤 Экспорт JSON</button>
+<button class="full" onclick="importJson()">📥 Импорт JSON</button>
+<button class="full danger" onclick="resetProject()">♻ Сбросить</button>
+</div>
+<div class="group">
+<h2>Переход</h2>
+<button class="full" onclick="location.href='index.html'">← На главную</button>
+</div>
+</aside>
+<main class="work">
+<nav class="top">
+<button onclick="createFirstScene()">Создать первую городскую сцену</button>
+<button onclick="createFullscreen('scene')">Объект во весь экран</button>
+<button onclick="setStageSize(1400,850)">Широкий экран</button>
+<button onclick="setStageSize(1000,760)">Мобильнее</button>
+<button onclick="clearSelection()">Снять выбор</button>
+</nav>
+<section class="stage-wrap">
+<div class="stage" id="stage"></div>
+</section>
+<section class="log" id="log">Готово. Создай объект.</section>
+</main>
+</div>
+<script>
+let objects={};
+let selected=null;
+let counter=0;
+let drag=null;
+let resize=null;
+let dx=0,dy=0;
+let startW=0,startH=0,startX=0,startY=0;
+let z=1;
+let template={w:220,h:90};
+function log(t){
+  let line="["+new Date().toLocaleTimeString()+"] "+t;
+  logBox.innerHTML=line+"<br>"+logBox.innerHTML;
+}
+function icon(t){
+  return {
+    scene:"🎬",window:"⬛",button:"🔘",text:"✍️",image:"🖼",video:"🎥",
+    document:"📄",archive:"🗄",institute:"🏛",house:"🏠",street:"🛣",tool:"🛠"
+  }[t]||"🔹";
+}
+function defaultTitle(type){
+  return {
+    scene:"Новая сцена",window:"Новое окно",button:"Новая кнопка",text:"Новый текст",
+    image:"Новая картинка",video:"Новое видео",document:"Новый документ",
+    archive:"Новый архив",institute:"Новый институт",house:"Новый дом",
+    street:"Новая улица",tool:"Новый инструмент"
+  }[type]||"Новый объект";
+}
+function createObj(type){
+  counter++;
+  let id=type+"_"+Date.now()+"_"+counter;
+  objects[id]={
+    id:id,title:defaultTitle(type),type:type,status:"new idea",
+    text:"Описание объекта.",file:"",
+    x:120+counter*20,y:100+counter*20,
+    w:template.w,h:template.h,z:z++,fx:[]
+  };
+  renderObj(objects[id]);
+  selectObj(id);
+  openEditor();
+  log("Создан объект: "+objects[id].title);
+}
+function createFullscreen(type){
+  createObj(type);
+  makeFullscreen();
+  saveEdit();
+}
+function createFirstScene(){
+  counter++;
+  let id="scene_"+Date.now()+"_"+counter;
+  objects[id]={
+    id:id,title:"Первая городская сцена",type:"scene",status:"architectural design",
+    text:"Главный объект-фон города. Сюда ставится city.jpg, а поверх размещаются кнопки, окна и документы.",
+    file:"city.jpg",
+    x:0,y:0,w:stage.clientWidth,h:stage.clientHeight,z:0,fx:[]
+  };
+  renderObj(objects[id]);
+  selectObj(id);
+  openEditor();
+  log("Создана первая городская сцена как обычный объект.");
+}
+function renderObj(o){
+  let el=document.getElementById(o.id);
+  if(!el){
+    el=document.createElement("div");
+    el.className="obj";
+    el.id=o.id;
+    el.onmousedown=startDrag;
+    el.ontouchstart=startDrag;
+    el.onclick=function(e){e.stopPropagation();selectObj(o.id);openEditor()};
+    el.ondblclick=function(e){e.stopPropagation();openEditor()};
+    stage.appendChild(el);
+  }
+  el.className="obj "+(o.fx||[]).join(" ");
+  if(selected===o.id)el.classList.add("active");
+  el.style.left=o.x+"px";
+  el.style.top=o.y+"px";
+  el.style.width=o.w+"px";
+  el.style.height=o.h+"px";
+  el.style.zIndex=o.z;
+  if(o.file){
+    el.style.backgroundImage="linear-gradient(rgba(0,0,0,.12),rgba(0,0,0,.35)),url('"+o.file+"')";
+  }else{
+    el.style.backgroundImage="";
+  }
+  el.innerHTML="<div class='caption'>"+icon(o.type)+" "+o.title+"<br><small>"+o.status+"</small></div>";
+  if(selected===o.id){
+    let h=document.createElement("div");
+    h.className="resize-handle";
+    h.onmousedown=startResize;
+    h.ontouchstart=startResize;
+    el.appendChild(h);
+  }
+}
+function selectObj(id){
+  selected=id;
+  Object.values(objects).forEach(renderObj);
+  let o=objects[id];
+  selName.textContent=icon(o.type)+" "+o.title;
+  selInfo.textContent=o.type+" / "+o.status+" / "+(o.file||"без файла");
+  fillEditor(o);
+}
+function clearSelection(){
+  selected=null;
+  Object.values(objects).forEach(renderObj);
+  selName.textContent="Ничего не выбрано";
+  selInfo.textContent="Создай или выбери объект";
+  backToCreate();
+}
+function openEditor(){
+  createPanel.style.display="none";
+  editPanel.style.display="block";
+}
+function backToCreate(){
+  editPanel.style.display="none";
+  createPanel.style.display="block";
+}
+function fillEditor(o){
+  eId.value=o.id;
+  eTitle.value=o.title;
+  eType.value=o.type;
+  eStatus.value=o.status;
+  eText.value=o.text;
+  eFile.value=o.file||"";
+}
+function saveEdit(){
+  if(!selected)return log("Сначала выбери объект.");
+  let o=objects[selected];
+  let newId=eId.value.trim();
+  if(newId && newId!==selected){
+    delete objects[selected];
+    let oldEl=document.getElementById(selected);
+    if(oldEl)oldEl.id=newId;
+    selected=newId;
+    o.id=newId;
+  }
+  o.title=eTitle.value;
+  o.type=eType.value;
+  o.status=eStatus.value;
+  o.text=eText.value;
+  o.file=eFile.value.trim();
+  objects[selected]=o;
+  renderObj(o);
+  selectObj(selected);
+  saveProject();
+  log("Объект сохранён: "+o.title);
+}
+function deleteObj(){
+  if(!selected)return log("Сначала выбери объект.");
+  let el=document.getElementById(selected);
+  if(el)el.remove();
+  delete objects[selected];
+  selected=null;
+  clearSelection();
+  saveProject();
+  log("Объект удалён.");
+}
+function duplicateObj(){
+  if(!selected)return log("Сначала выбери объект.");
+  let b=objects[selected];
+  let id=b.type+"_"+Date.now();
+  objects[id]={...b,id:id,title:b.title+" копия",x:b.x+40,y:b.y+40,z:z++,fx:[...(b.fx||[])]};
+  renderObj(objects[id]);
+  selectObj(id);
+  openEditor();
+  log("Дубликат создан.");
+}
+function makeFullscreen(){
+  if(!selected)return log("Сначала выбери объект.");
+  let o=objects[selected];
+  o.x=0;o.y=0;o.w=stage.clientWidth;o.h=stage.clientHeight;
+  o.z=0;
+  renderObj(o);
+  selectObj(selected);
+  log("Объект растянут на весь экран.");
+}
+function saveAsTemplate(){
+  if(!selected)return log("Сначала выбери объект.");
+  let o=objects[selected];
+  template={w:o.w,h:o.h};
+  log("Размер сохранён как шаблон: "+o.w+"×"+o.h);
+}
+function createTemplateCopy(){
+  createObj("window");
+  log("Создан объект по текущему шаблону размера.");
+}
+function bringFront(){
+  if(!selected)return;
+  objects[selected].z=z++;
+  renderObj(objects[selected]);
+}
+function sendBack(){
+  if(!selected)return;
+  objects[selected].z=0;
+  renderObj(objects[selected]);
+}
+function toggleFx(fx){
+  if(!selected)return log("Сначала выбери объект.");
+  let o=objects[selected];
+  o.fx=o.fx||[];
+  o.fx=o.fx.includes(fx)?o.fx.filter(x=>x!==fx):[...o.fx,fx];
+  renderObj(o);
+  saveProject();
+}
+function setStatus(st){
+  if(!selected)return log("Сначала выбери объект.");
+  objects[selected].status=st;
+  renderObj(objects[selected]);
+  selectObj(selected);
+  saveProject();
+}
+function startDrag(e){
+  if(e.target.className==="resize-handle")return;
+  drag=e.currentTarget;
+  let p=point(e),r=drag.getBoundingClientRect();
+  dx=p.x-r.left;dy=p.y-r.top;
+  drag.classList.add("dragging");
+  document.addEventListener("mousemove",moveDrag);
+  document.addEventListener("mouseup",endDrag);
+  document.addEventListener("touchmove",moveDrag,{passive:false});
+  document.addEventListener("touchend",endDrag);
+  e.preventDefault();
+}
+function moveDrag(e){
+  if(!drag)return;
+  let p=point(e),sr=stage.getBoundingClientRect();
+  let x=Math.max(0,p.x-sr.left-dx);
+  let y=Math.max(0,p.y-sr.top-dy);
+  drag.style.left=x+"px";
+  drag.style.top=y+"px";
+  if(objects[drag.id]){
+    objects[drag.id].x=x;
+    objects[drag.id].y=y;
+  }
+  e.preventDefault();
+}
+function endDrag(){
+  if(drag)drag.classList.remove("dragging");
+  drag=null;
+  document.removeEventListener("mousemove",moveDrag);
+  document.removeEventListener("mouseup",endDrag);
+}
+function startResize(e){
+  e.stopPropagation();
+  resize=e.target.parentElement;
+  let p=point(e);
+  startX=p.x;startY=p.y;
+  startW=resize.offsetWidth;
+  startH=resize.offsetHeight;
+  document.addEventListener("mousemove",moveResize);
+  document.addEventListener("mouseup",endResize);
+  document.addEventListener("touchmove",moveResize,{passive:false});
+  document.addEventListener("touchend",endResize);
+  e.preventDefault();
+}
+function moveResize(e){
+  if(!resize)return;
+  let p=point(e);
+  let w=Math.max(80,startW+(p.x-startX));
+  let h=Math.max(50,startH+(p.y-startY));
+  resize.style.width=w+"px";
+  resize.style.height=h+"px";
+  if(objects[resize.id]){
+    objects[resize.id].w=w;
+    objects[resize.id].h=h;
+  }
+  e.preventDefault();
+}
+function endResize(){
+  resize=null;
+  document.removeEventListener("mousemove",moveResize);
+  document.removeEventListener("mouseup",endResize);
+  saveProject();
+}
+function point(e){
+  return e.touches?{x:e.touches[0].clientX,y:e.touches[0].clientY}:{x:e.clientX,y:e.clientY};
+}
+function setStageSize(w,h){
+  stage.style.width=w+"px";
+  stage.style.height=h+"px";
+  log("Размер экрана: "+w+"×"+h);
+}
+function saveProject(){
+  localStorage.setItem("ural1_object_constructor_2",JSON.stringify(objects));
+}
+function loadProject(){
+  let s=localStorage.getItem("ural1_object_constructor_2");
+  if(!s){log("Сохранения нет.");return}
+  objects=JSON.parse(s);
+  stage.innerHTML="";
+  Object.values(objects).forEach(renderObj);
+  clearSelection();
+  log("Проект загружен.");
+}
+function exportJson(){
+  prompt("Скопируй JSON проекта:",JSON.stringify(objects));
+}
+function importJson(){
+  let txt=prompt("Вставь JSON проекта:");
+  if(!txt)return;
+  try{
+    objects=JSON.parse(txt);
+    stage.innerHTML="";
+    Object.values(objects).forEach(renderObj);
+    saveProject();
+    log("JSON импортирован.");
+  }catch(e){
+    alert("Ошибка JSON: "+e.message);
+  }
+}
+function resetProject(){
+  if(!confirm("Очистить конструктор?"))return;
+  localStorage.removeItem("ural1_object_constructor_2");
+  objects={};
+  stage.innerHTML="";
+  clearSelection();
+  log("Конструктор очищен.");
+}
+stage.onclick=function(){clearSelection()};
+window.onload=loadProject;
+</script>
+</body>
+</html>
